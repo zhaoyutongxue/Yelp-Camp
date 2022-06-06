@@ -29,6 +29,13 @@ app.set('view engine','ejs');
 // __dirname is an environment variable that tells you the absolute path of the directory containing the currently executing f
 app.set('views',path.join(__dirname,'/views'))
 
+app.get('/campgrounds',async(req,res) => {
+    // save mongo db data into a local variable, then pass through the data and render it. 
+    const campgrounds = await Campground.find();
+    res.render('campgrounds/index', {campgrounds})
+})
+
+
 app.get('/home', (req, res) => {
     res.render('home')
   })
@@ -41,6 +48,8 @@ app.get('/makecampground', async(req, res) => {
   res.send(camp); 
 })
  
+
+
 app.get('/', (req, res) => {
   res.send('Hello World! from Yelp Camp')
 })
