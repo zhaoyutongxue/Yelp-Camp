@@ -18,10 +18,19 @@
     <h3>
         the ID is: <%= campID %>
     </h3>
-    <footer>
-        <a href="/campgrounds">All Campground</a>
-        <a href="/campgrounds/<%= campID %>/edit">Edit Campground</a>
-    </footer>
+
 </body>
+<footer>
+    <a href="/campgrounds">All Campground</a>
+    <a href="/campgrounds/<%= campID %>/edit">Edit Campground</a>
+</footer>
+
+<p>
+<form action="/campgrounds/<%=campID%>?_method=DELETE" method='POST'>
+    <button>
+        DELETE
+    </button>
+</form>
+</p>
 
 </html>

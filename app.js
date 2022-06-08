@@ -62,8 +62,9 @@ app.put('/campgrounds/:id/edit', async (req, res) => {
 
 
 
+
 // save the new campground
-app.post('/campgrounds', async (req, res) => {
+app.put('/campgrounds', async (req, res) => {
     const campground = new Campground(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`)
@@ -77,15 +78,14 @@ app.get('/campgrounds/:id', async (req, res) => {
     res.render('campgrounds/show', { campID, campground })
 })
 
-// campground home page
-app.get('/home', (req, res) => {
-    res.render('home')
+
+// delete the camground
+app.delete('/campgrounds/:id', async (req, res) => {
+    await Campground.findByIdAndDelete(req.params.id)
+    res.redirect('/campgrounds')
 })
 
-// test page 
-app.get('/', (req, res) => {
-    res.send('Hello World! from Yelp Camp')
-})
+
 
 app.listen(port, () => {
     console.log(`Yelp camp app listening on port ${port}`)
