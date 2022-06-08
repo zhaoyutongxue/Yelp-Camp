@@ -8,7 +8,7 @@
     <title>Update a Campground </title>
 </head>
 <!-- client side can only have the HMTL verb POST, but we override it in query as put -->
-<form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST">
+<form action="/campgrounds/<%= campground._id %>/edit?_method=PUT" method="POST">
     <div>
         <label for="title">Title</label>
         <input type="text" , id="title" , name="campground[title]" , value="<%=campground.title%>">

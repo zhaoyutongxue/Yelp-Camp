@@ -53,10 +53,8 @@ app.get('/campgrounds/:id/edit', async (req, res) => {
 })
 
 // app.put is used to update campground
-app.put('/campgrounds/:id', async (req, res) => {
-
-    const { id } = req.params;
-    const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
+app.put('/campgrounds/:id/edit', async (req, res) => {
+    const campground = await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground });
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`)
     // res.send('it works!')
