@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose');
-const path = require('path')
+const path = require('path');
+const ejsMate = require('ejs-mate');
 const port = 3000
 // the model object is Campground:
 const Campground = require('./models/campground.js')
@@ -30,7 +31,7 @@ app.set('views', path.join(__dirname, '/views'))
 app.use(methodOverride('_method'))
 // this line of coder allow you to see the req.body.
 app.use(express.urlencoded({ extended: true }))
-
+app.engine('ejs', ejsMate);
 
 //List of the campgrounds:
 app.get('/campgrounds', async (req, res) => {
