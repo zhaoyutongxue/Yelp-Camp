@@ -79,6 +79,10 @@ app.get('/campgrounds/:id', async (req, res) => {
     res.render('campgrounds/show', { campID, campground })
 })
 
+// Home page, empty for now
+app.get('/', async (req, res) => {
+    res.render('campgrounds/home')
+})
 
 // delete the camground
 app.delete('/campgrounds/:id', async (req, res) => {
