@@ -1,23 +1,23 @@
 // this is the js file to seed our database for testing purpose.
 const express = require('express')
 const mongoose = require('mongoose');
-const path =require('path')
+const path = require('path')
 const port = 3000
 const Campground = require('../models/campground.js')
 
 const cities = require('./cities');
-const {places, descriptors } = require('./seedHelpers')
+const { places, descriptors } = require('./seedHelpers')
 
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp',{
-    useNewUrlParser:true,
+mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+    useNewUrlParser: true,
     // useCreateIndex:true,
-    useUnifiedTopology:true
+    useUnifiedTopology: true
 })
 
 const db = mongoose.connection;
-db.on('error',console.error.bind(console,"connection error:"));
-db.once("open",()=>{
+db.on('error', console.error.bind(console, "connection error:"));
+db.once("open", () => {
     console.log("database connected")
 })
 
@@ -29,23 +29,28 @@ const sample = array => array[Math.floor(Math.random() * array.length)];
 
 
 // delete everything in the seed database, then save c. 
-const seedDB = async()=>{
+const seedDB = async () => {
     await Campground.deleteMany({});
     // const c = new Campground({title:'purple fields'})
     // await c.save();
-    for(let i=0;i<50;i++){
-        const ram1000 = Math.round(Math.random()*10);
+    for (let i = 0; i < 50; i++) {
+        const ram1000 = Math.round(Math.random() * 10);
+        const price = Math.floor(Math.random() * 10)
         const c = new Campground({
-            location:`${cities[ram1000].city}, ${cities[ram1000].state}`, 
-            title:`${sample(descriptors)} ${sample(places)}`
+            location: `${cities[ram1000].city}, ${cities[ram1000].state}`,
+            title: `${sample(descriptors)} ${sample(places)}`,
+            image: 'https://source.unsplash.com/collection/484351',
+            description: 'just typing something',
+            price: price
+
         })
         await c.save();
     }
-    
+
 }
 
 
-seedDB().then(console.log('seed data written')).then(()=>{
+seedDB().then(console.log('seed data written')).then(() => {
     mongoose.connection.close();
 });
 

@@ -9,7 +9,10 @@
     <h3>
         the ID is: <%= campID %>
     </h3>
-
+    <img src="<%=campground.image%>" alt="">
+    <p>
+        <%= campground.description %>
+    </p>
     <footer>
         <a href="/campgrounds">All Campground</a>
         <a href="/campgrounds/<%= campID %>/edit">Edit Campground</a>
