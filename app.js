@@ -45,6 +45,15 @@ app.get('/campgrounds/new', (req, res) => {
     res.render('campgrounds/new')
 })
 
+// save the new campground
+app.post('/campgrounds', async (req, res) => {
+    const campground = new Campground(req.body.campground);
+    await campground.save();
+    res.redirect(`/campgrounds/${campground._id}`)
+    // res.send(req.body)
+})
+
+
 // UPDATE: page to update a campground
 // render the "edit" page:
 app.get('/campgrounds/:id/edit', async (req, res) => {
@@ -64,13 +73,6 @@ app.put('/campgrounds/:id/edit', async (req, res) => {
 
 
 
-// save the new campground
-app.put('/campgrounds', async (req, res) => {
-    const campground = new Campground(req.body.campground);
-    await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`)
-    // res.send(req.body)
-})
 
 //Show 1 campground: 
 app.get('/campgrounds/:id', async (req, res) => {
