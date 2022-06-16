@@ -6,7 +6,7 @@ const port = 3000
 // the model object is Campground:
 const Campground = require('./models/campground.js')
 var methodOverride = require('method-override')
-
+const catchAsync = require('./utils/catchAsync')
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
@@ -46,34 +46,31 @@ app.get('/campgrounds/new', (req, res) => {
 })
 
 // save the new campground
-app.post('/campgrounds', async (req, res, next) => {
-    // this try and catch error handler should pass the error to the error handler at the bottom of the code.
-    try {
-        const campground = new Campground(req.body.campground);
-        await campground.save();
-        res.redirect(`/campgrounds/${campground._id}`)
-        // res.send(req.body)
-    } catch (e) {
-        next(e);
-    }
-})
+app.post('/campgrounds', catchAsync(async (req, res, next) => {
+    // 1. this try and catch error handler should pass the error to the error handler at the bottom of the code.
+    // 2. The try catch structure has been replaced by the catchAsync(). 
+    const campground = new Campground(req.body.campground);
+    await campground.save();
+    res.redirect(`/campgrounds/${campground._id}`)
+    // res.send(req.body)
+}))
 
 
 // UPDATE: page to update a campground
 // render the "edit" page:
-app.get('/campgrounds/:id/edit', async (req, res) => {
+app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
     const campID = req.params.id;
     const campground = await Campground.findById(campID);
     res.render('campgrounds/edit', { campID, campground })
-})
+}))
 
 // app.put is used to update campground
-app.put('/campgrounds/:id/edit', async (req, res) => {
+app.put('/campgrounds/:id/edit', catchAsync(async (req, res) => {
     const campground = await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground });
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`)
     // res.send('it works!')
-})
+}))
 
 
 
@@ -100,7 +97,9 @@ app.delete('/campgrounds/:id', async (req, res) => {
 
 // error handling
 app.use((err, req, res, next) => {
+    // console.log(err);
     res.send('oh boy, something went wrong.')
+
 })
 
 
