@@ -46,11 +46,16 @@ app.get('/campgrounds/new', (req, res) => {
 })
 
 // save the new campground
-app.post('/campgrounds', async (req, res) => {
-    const campground = new Campground(req.body.campground);
-    await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`)
-    // res.send(req.body)
+app.post('/campgrounds', async (req, res, next) => {
+    // this try and catch error handler should pass the error to the error handler at the bottom of the code.
+    try {
+        const campground = new Campground(req.body.campground);
+        await campground.save();
+        res.redirect(`/campgrounds/${campground._id}`)
+        // res.send(req.body)
+    } catch (e) {
+        next(e);
+    }
 })
 
 
@@ -92,6 +97,11 @@ app.delete('/campgrounds/:id', async (req, res) => {
     res.redirect('/campgrounds')
 })
 
+
+// error handling
+app.use((err, req, res, next) => {
+    res.send('oh boy, something went wrong.')
+})
 
 
 app.listen(port, () => {
