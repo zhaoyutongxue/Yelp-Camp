@@ -7,6 +7,7 @@ const port = 3000
 const Campground = require('./models/campground.js')
 var methodOverride = require('method-override')
 const catchAsync = require('./utils/catchAsync')
+const ExpressError = require('./utils/ExpressError')
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
@@ -34,11 +35,11 @@ app.use(express.urlencoded({ extended: true }))
 app.engine('ejs', ejsMate);
 
 //List of the campgrounds:
-app.get('/campgrounds', async (req, res) => {
+app.get('/campgrounds', catchAsync(async (req, res) => {
     // save mongo db data into a local variable, then pass through the data and render it. 
     const campgrounds = await Campground.find();
     res.render('campgrounds/index', { campgrounds })
-})
+}))
 
 // CREATE: page to add new campground
 app.get('/campgrounds/new', (req, res) => {
@@ -49,12 +50,14 @@ app.get('/campgrounds/new', (req, res) => {
 app.post('/campgrounds', catchAsync(async (req, res, next) => {
     // 1. this try and catch error handler should pass the error to the error handler at the bottom of the code.
     // 2. The try catch structure has been replaced by the catchAsync(). 
+    if (!req.body.campground) {
+        throw new ExpressError("Invalid Campground data", "400 ")
+    }
     const campground = new Campground(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`)
     // res.send(req.body)
 }))
-
 
 // UPDATE: page to update a campground
 // render the "edit" page:
@@ -72,36 +75,37 @@ app.put('/campgrounds/:id/edit', catchAsync(async (req, res) => {
     // res.send('it works!')
 }))
 
-
-
-
-
 //Show 1 campground: 
-app.get('/campgrounds/:id', async (req, res) => {
+app.get('/campgrounds/:id', catchAsync(async (req, res) => {
     const campID = req.params.id;
     const campground = await Campground.findById(campID);
     res.render('campgrounds/show', { campID, campground })
-})
+}))
 
 // Home page, empty for now
-app.get('/', async (req, res) => {
+app.get('/', catchAsync(async (req, res) => {
     res.render('campgrounds/home')
-})
+}))
 
 // delete the camground
-app.delete('/campgrounds/:id', async (req, res) => {
+app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
     await Campground.findByIdAndDelete(req.params.id)
     res.redirect('/campgrounds')
+}))
+
+// if nothing matches, response with 404
+app.all('*', (req, res, next) => {
+    next(new ExpressError('page not found!', 404));
+
 })
 
 
 // error handling
 app.use((err, req, res, next) => {
     // console.log(err);
-    res.send('oh boy, something went wrong.')
-
+    const { message = "something went wrong", statusCode = 500 } = err;
+    res.status(statusCode).render('error')
 })
-
 
 app.listen(port, () => {
     console.log(`Yelp camp app listening on port ${port}`)
