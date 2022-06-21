@@ -103,8 +103,11 @@ app.all('*', (req, res, next) => {
 // error handling
 app.use((err, req, res, next) => {
     // console.log(err);
-    const { message = "something went wrong", statusCode = 500 } = err;
-    res.status(statusCode).render('error')
+    const { statusCode = 500 } = err;
+    // console.log(err)
+    // console.log('this is the err.message: ' + err.message);
+    if (!err.message) err.message = 'oh no, something went wrong';
+    res.status(statusCode).render('error', { err })
 })
 
 app.listen(port, () => {

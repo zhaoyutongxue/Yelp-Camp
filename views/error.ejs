@@ -5,13 +5,12 @@
         <!-- offset-3 will move the div to the middle, because there are 12 units in a row -->
         <div class="col-6 offset-3">
             <div class="alert alert-danger" role="alert">
-                <h4 class="alert-heading">Error</h4>
-                <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit
-                    longer
-                    so
-                    that you can see how spacing within an alert works with this kind of content.</p>
-                <hr>
-                <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
+                <h4 class="alert-heading">
+                    <%= err.message %>
+                </h4>
+                <p>
+                    <%= err.stack %>
+                </p>
             </div>
 
         </div>
