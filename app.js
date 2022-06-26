@@ -109,7 +109,7 @@ app.put('/campgrounds/:id/edit', validateCampground, catchAsync(async (req, res)
 //Show 1 campground: 
 app.get('/campgrounds/:id', catchAsync(async (req, res) => {
     const campID = req.params.id;
-    const campground = await Campground.findById(campID);
+    const campground = await Campground.findById(campID).populate('reviews');
     res.render('campgrounds/show', { campID, campground })
 }))
 
@@ -128,10 +128,10 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
 // post review for a campground
 app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res) => {
     const campID = req.params.id;
-    const campground = await Campground.findById(campID).populate('review');
-    const review = new Review(req.body.review);
+    const campground = await Campground.findById(campID).populate('reviews');
+    const review = new Review(req.body.reviews);
     await review.save();
-    campground.review.push(review);
+    campground.reviews.push(review);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`)
 }))
