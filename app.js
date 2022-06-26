@@ -10,7 +10,7 @@ const Review = require('./models/review.js')
 var methodOverride = require('method-override')
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
-const { campgroundSchema } = require('./schemas.js')
+const { campgroundSchema, reviewSchema } = require('./schemas.js')
 
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
@@ -38,9 +38,8 @@ app.use(methodOverride('_method'))
 app.use(express.urlencoded({ extended: true }))
 app.engine('ejs', ejsMate);
 
+// The middleware to validate campground input data:
 const validateCampground = (req, res, next) => {
-
-
     const { error } = campgroundSchema.validate(req.body);
     if (error) {
         const msg = error.details.map(el => el.message).join(',')
@@ -50,6 +49,18 @@ const validateCampground = (req, res, next) => {
         next();
     }
 }
+// The middleware to validate review input data:
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    }
+    else {
+        next();
+    }
+}
+
 
 
 
@@ -113,14 +124,9 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
     res.redirect('/campgrounds')
 }))
 
-// uncomment this if you want to see the full req.body
-// app.use(express.json())    // <==== parse request body as JSON
-// then you can put this code to see the full request body. 
-// res.json({ requestBody: req.body })
-
 
 // post review for a campground
-app.post('/campgrounds/:id/reviews', catchAsync(async (req, res) => {
+app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res) => {
     const campID = req.params.id;
     const campground = await Campground.findById(campID).populate('review');
     const review = new Review(req.body.review);

@@ -6,7 +6,7 @@ const ReviewSchema = new Schema({
     rating: Number
 })
 // the first arg is the singular name of the collection.
-// mongoose will use campgrounds as collection in the database. 
+// mongoose will use campgrounds as collection in the database.  
 const Review = mongoose.model('Review', ReviewSchema);
 
 module.exports = Review; 

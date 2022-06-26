@@ -1,5 +1,7 @@
-const Joi = require('joi');
+// this is the schema validation. It acts as the second defence line 
+// follow the doc, it is easy to write. 
 
+const Joi = require('joi');
 module.exports.campgroundSchema = Joi.object({
     campground: Joi.object({
         title: Joi.string().required(),
@@ -10,3 +12,9 @@ module.exports.campgroundSchema = Joi.object({
     }).required()
 })
 
+module.exports.reviewSchema = Joi.object({
+    review: Joi.object({
+        body: Joi.string().required(),
+        rating: Joi.number().required().min(0).max(5)
+    }).required()
+})
