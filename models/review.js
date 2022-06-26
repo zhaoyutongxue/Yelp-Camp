@@ -3,8 +3,10 @@ const Schema = mongoose.Schema;
 
 const ReviewSchema = new Schema({
     body: String,
-    rating: Number,
+    rating: Number
 })
-// the first arg is the ingular name of the collection.
+// the first arg is the singular name of the collection.
 // mongoose will use campgrounds as collection in the database. 
-module.exports = mongoose.model('Review', ReviewSchema);
+const Review = mongoose.model('Review', ReviewSchema);
+
+module.exports = Review; 

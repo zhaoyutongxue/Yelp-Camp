@@ -5,6 +5,8 @@ const ejsMate = require('ejs-mate');
 const port = 3000
 // the model object is Campground:
 const Campground = require('./models/campground.js')
+const Review = require('./models/review.js')
+
 var methodOverride = require('method-override')
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
@@ -111,10 +113,28 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
     res.redirect('/campgrounds')
 }))
 
+// uncomment this if you want to see the full req.body
+// app.use(express.json())    // <==== parse request body as JSON
+// then you can put this code to see the full request body. 
+// res.json({ requestBody: req.body })
+
+
+// post review for a campground
+app.post('/campgrounds/:id/reviews', catchAsync(async (req, res) => {
+    const campID = req.params.id;
+    const campground = await Campground.findById(campID).populate('review');
+    const review = new Review(req.body.review);
+    await review.save();
+    campground.review.push(review);
+    await campground.save();
+    res.redirect(`/campgrounds/${campground._id}`)
+}))
+
+
+
 // if nothing matches, response with 404
 app.all('*', (req, res, next) => {
     next(new ExpressError('page not found!', 404));
-
 })
 
 

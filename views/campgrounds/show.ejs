@@ -23,4 +23,19 @@
                 </button>
             </form>
         </div>
+
+        <form action="/campgrounds/<%=campID%>/reviews" method="POST">
+            <div class="card-body mb-3">
+                <h2>leave a review</h2>
+                <label class="form-label" for="rating">Rating</label>
+                <input class="form-range" id="rating" type="range" min="0" max="5" name="review[rating]">
+                <label class="form-label" for="description">Review</label>
+                <textarea class="form-control" id="description" type="text" name="review[body]" cols="30"
+                    rows="3"></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <button class="btn btn-success">Submit</button>
+        </form>
     </div>

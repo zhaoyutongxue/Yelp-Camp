@@ -16,4 +16,5 @@ const CampgroundSchema = new Schema({
 })
 // the first arg is the ingular name of the collection.
 // mongoose will use campgrounds as collection in the database. 
-module.exports = mongoose.model('Campground', CampgroundSchema);
+const Campground = mongoose.model('Campground', CampgroundSchema);
+module.exports = Campground;
