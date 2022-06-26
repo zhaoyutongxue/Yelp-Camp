@@ -1,53 +1,63 @@
 <% layout('/layouts/boilerplate') %>
+    <div class="row">
+        <div class="col-6">
+            <div class="card mb-3">
+                <img src="<%=campground.image%>" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%= campground.title %>
+                    </h5>
 
-    <div class="card mb-3">
-        <img src="<%=campground.image%>" class="card-img-top">
-        <div class="card-body">
-            <h5 class="card-title">
-                <%= campground.title %>
-            </h5>
+                    <p class="card-text text-muted">
+                        <%= campground.location %>
+                    </p>
 
-            <p class="card-text text-muted">
-                <%= campground.location %>
-            </p>
+                    <p class="card-text">
+                        <%= campground.description %>
+                    </p>
+                    <a href="/campgrounds" class="btn btn-primary">All Campground</a>
+                    <a href="/campgrounds/<%= campID %>/edit" class="btn btn-warning">Edit Campground</a>
 
-            <p class="card-text">
-                <%= campground.description %>
-            </p>
-            <a href="/campgrounds" class="btn btn-primary">All Campground</a>
-            <a href="/campgrounds/<%= campID %>/edit" class="btn btn-warning">Edit Campground</a>
-
-            <form action="/campgrounds/<%=campID%>?_method=DELETE" method='POST'>
-                <button class="btn btn-danger">
-                    DELETE
-                </button>
-            </form>
-        </div>
-
-        <form action="/campgrounds/<%=campID%>/reviews" method="POST" class='validation-form card-body mb-3' novalidate>
-            <h2>leave a review</h2>
-            <label class="form-label" for="rating">Rating</label>
-            <input class="form-range" id="rating" type="range" min="0" max="5" name="reviews[rating]">
-            <div>
-                <label class="form-label" for="description">Review</label>
-                <textarea class="form-control" id="description" type="text" name="reviews[body]" cols="30" rows="3"
-                    required></textarea>
-                <div class="valid-feedback">
-                    Looks good!
+                    <form action="/campgrounds/<%=campID%>?_method=DELETE" method='POST'>
+                        <button class="btn btn-danger">
+                            DELETE
+                        </button>
+                    </form>
                 </div>
             </div>
-            <button class="btn btn-success">Submit</button>
-        </form>
-        <div class="card mb-3">
-            <% for(let review of campground.reviews) { %>
-                <li>
-                    Rating:<%= review.rating %>
-                        <p>
-                            <%= review.body %>
-                        </p>
+        </div>
+        <div class="col-6">
+            <form action="/campgrounds/<%=campID%>/reviews" method="POST" class='validation-form card-body mb-3'
+                novalidate>
+                <h2>leave a review</h2>
+                <label class="form-label" for="rating">Rating</label>
+                <input class="form-range" id="rating" type="range" min="0" max="5" name="reviews[rating]">
+                <div>
+                    <label class="form-label" for="description">Review</label>
+                    <textarea class="form-control" id="description" type="text" name="reviews[body]" cols="30" rows="3"
+                        required></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <button class="btn btn-success">Submit</button>
+            </form>
 
-                </li>
-
-                <% } %>
+            <div class="card mb-3">
+                <% for(let review of campground.reviews) { %>
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <div class="card-title">
+                                Rating:<%= review.rating %>
+                            </div>
+                            <div class="card-text">
+                                <p>
+                                    <%= review.body %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+            </div>
         </div>
     </div>
