@@ -21,7 +21,6 @@ CampgroundSchema.post('findOneAndDelete', async (campground) => {
     if (campground) {
         await Review.deleteMany({ _id: { $in: campground.reviews } })
     }
-
 })
 
 // the first arg is the ingular name of the collection.
