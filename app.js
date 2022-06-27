@@ -106,7 +106,7 @@ app.put('/campgrounds/:id/edit', validateCampground, catchAsync(async (req, res)
     // res.send('it works!')
 }))
 
-//Show 1 campground: 
+//Show campground: 
 app.get('/campgrounds/:id', catchAsync(async (req, res) => {
     const campID = req.params.id;
     const campground = await Campground.findById(campID).populate('reviews');
@@ -125,7 +125,6 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
 }))
 
 
-// post review for a campground
 app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res) => {
     const campID = req.params.id;
     const campground = await Campground.findById(campID).populate('reviews');
@@ -136,6 +135,19 @@ app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res)
     res.redirect(`/campgrounds/${campground._id}`)
 }))
 
+
+
+
+
+// delete review
+app.delete('/campgrounds/:id/reviews/:reviewId', catchAsync(async (req, res) => {
+    const campID = req.params.id;
+    const reviewId = req.params.reviewId;
+    await Review.findByIdAndDelete(req.params.reviewId)
+    // remove the reference in campground document's review field. 
+    await Campground.findByIdAndUpdate(campID, { $pull: { reviews: reviewId } })
+    res.redirect(`/campgrounds/${req.params.id}`)
+}))
 
 
 // if nothing matches, response with 404
