@@ -118,7 +118,7 @@ app.get('/', catchAsync(async (req, res) => {
     res.render('campgrounds/home')
 }))
 
-// delete the camground
+// delete the camground, and remove all reviews under the campground
 app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
     await Campground.findByIdAndDelete(req.params.id)
     res.redirect('/campgrounds')

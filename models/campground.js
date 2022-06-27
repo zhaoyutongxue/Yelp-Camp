@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+const { campgroundSchema } = require('../schemas');
 const Schema = mongoose.Schema;
+const Review = require('./review');
 
 const CampgroundSchema = new Schema({
     title: String,
@@ -14,6 +16,14 @@ const CampgroundSchema = new Schema({
         }
     ]
 })
+
+CampgroundSchema.post('findOneAndDelete', async (campground) => {
+    if (campground) {
+        await Review.deleteMany({ _id: { $in: campground.reviews } })
+    }
+
+})
+
 // the first arg is the ingular name of the collection.
 // mongoose will use campgrounds as collection in the database. 
 const Campground = mongoose.model('Campground', CampgroundSchema);
