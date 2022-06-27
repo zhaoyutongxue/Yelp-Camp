@@ -2,10 +2,9 @@ const e = require('express');
 const express = require('express')
 const app = express();
 const session = require('express-session')
-
 const sessionOptions = { secret: 'thisisnotagoodsecret', resave: false, saveUninitialized: false }
-app.use(session(sessionOptions));
 
+app.use(session(sessionOptions));
 
 
 app.get('/viewcount', (req, res) => {
