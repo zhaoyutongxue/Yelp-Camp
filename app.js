@@ -3,11 +3,8 @@ const mongoose = require('mongoose');
 const path = require('path');
 const ejsMate = require('ejs-mate');
 const port = 3000
-// the model object is Campground:
-const Campground = require('./models/campground.js')
-const Review = require('./models/review.js')
-
-var methodOverride = require('method-override')
+const session = require('express-session')
+const methodOverride = require('method-override')
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
 
@@ -16,7 +13,7 @@ const reviews = require('./routes/review')
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
-    // useCreateIndex:true,
+    // useCreateIndex:true, 
     useUnifiedTopology: true
 })
 
@@ -27,12 +24,24 @@ db.once("open", () => {
 })
 
 const app = express()
-
+// express session
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        // secure: true,
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}))
 // use EJS for HTML templating: use a template to render data. \
 // set view engine to EJS.
 app.set('view engine', 'ejs');
 // __dirname is an environment variable that tells you the absolute path of the directory containing the currently executing f
 app.set('views', path.join(__dirname, '/views'))
+
 // use npm package "method-override" for HTML verb PUT
 app.use(methodOverride('_method'))
 app.use(express.urlencoded({ extended: true }))
@@ -40,8 +49,9 @@ app.engine('ejs', ejsMate);
 // use the routers
 app.use('/campgrounds', campgrounds)
 app.use('/campgrounds/:id/reviews', reviews)
-
+// set up path for static files
 app.use(express.static(path.join(__dirname, '/public')))
+
 
 // Home page, empty for now
 app.get('/home', catchAsync(async (req, res) => {
