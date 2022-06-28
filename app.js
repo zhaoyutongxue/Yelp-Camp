@@ -7,6 +7,7 @@ const session = require('express-session')
 const methodOverride = require('method-override')
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
+const flash = require('connect-flash');
 
 const campgrounds = require('./routes/campground')
 const reviews = require('./routes/review')
@@ -24,6 +25,19 @@ db.once("open", () => {
 })
 
 const app = express()
+
+
+// use EJS for HTML templating: use a template to render data. \
+// set view engine to EJS.
+app.set('view engine', 'ejs');
+// __dirname is an environment variable that tells you the absolute path of the directory containing the currently executing f
+app.set('views', path.join(__dirname, '/views'))
+
+// use npm package "method-override" for HTML verb PUT
+app.use(methodOverride('_method'))
+app.use(express.urlencoded({ extended: true }))
+app.engine('ejs', ejsMate);
+
 // express session
 app.use(session({
     secret: 'keyboard cat',
@@ -36,16 +50,16 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }))
-// use EJS for HTML templating: use a template to render data. \
-// set view engine to EJS.
-app.set('view engine', 'ejs');
-// __dirname is an environment variable that tells you the absolute path of the directory containing the currently executing f
-app.set('views', path.join(__dirname, '/views'))
 
-// use npm package "method-override" for HTML verb PUT
-app.use(methodOverride('_method'))
-app.use(express.urlencoded({ extended: true }))
-app.engine('ejs', ejsMate);
+app.use(flash())
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success')
+    res.locals.error = req.flash('error')
+    res.locals.warning = req.flash('warning')
+    next()
+})
+
+
 // use the routers
 app.use('/campgrounds', campgrounds)
 app.use('/campgrounds/:id/reviews', reviews)
