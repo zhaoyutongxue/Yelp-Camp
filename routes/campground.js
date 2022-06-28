@@ -5,17 +5,7 @@ const ExpressError = require('../utils/ExpressError')
 const Campground = require('../models/campground.js')
 const { campgroundSchema } = require('../schemas.js')
 
-// The middleware to validate review input data:
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-    }
-    else {
-        next();
-    }
-}
+
 
 // The middleware to validate campground input data:
 const validateCampground = (req, res, next) => {
