@@ -41,9 +41,7 @@ app.engine('ejs', ejsMate);
 app.use('/campgrounds', campgrounds)
 app.use('/campgrounds/:id/reviews', reviews)
 
-
-
-
+app.use(express.static(path.join(__dirname, '/public')))
 
 // Home page, empty for now
 app.get('/home', catchAsync(async (req, res) => {
