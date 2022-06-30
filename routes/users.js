@@ -1,4 +1,5 @@
 const express = require('express');
+const { session } = require('passport');
 const passport = require('passport');
 const router = express.Router();
 const User = require('../models/user.js')
@@ -27,14 +28,17 @@ router.get('/login', (req, res) => {
     res.render('./users/login.ejs');
 })
 router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
-    return res.redirect('/campgrounds');
+    req.flash('success', 'welcome back!')
+    const redirectUrl = req.session.returnTo || '/campgrounds';
+    delete req.session.returnTo;
+    console.log('redirect route is: ' + redirectUrl)
+
+    res.redirect(redirectUrl);
 })
 
 router.get('/logout', (req, res, next) => {
-    req.logout(function (err) {
-        if (err) { return next(err); }
-        req.flash('success', "Goodbye!");
-        res.redirect('/campgrounds');
-    });
+    req.logout()
+    req.flash('success', "Goodbye!");
+    res.redirect('/campgrounds');
 });
 module.exports = router;
