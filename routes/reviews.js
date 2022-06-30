@@ -5,7 +5,7 @@ const catchAsync = require('../utils/catchAsync')
 const ExpressError = require('../utils/ExpressError')
 
 const { reviewSchema } = require('../schemas.js');
-const { route } = require('./campground');
+const { route } = require('./campgrounds');
 const router = express.Router({ mergeParams: true })
 
 const Campground = require('../models/campground.js')

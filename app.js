@@ -8,16 +8,20 @@ const methodOverride = require('method-override')
 const catchAsync = require('./utils/catchAsync')
 const ExpressError = require('./utils/ExpressError')
 const flash = require('connect-flash');
+const passport = require('passport');
+const localStrategy = require('passport-local');
+const User = require('./models/user')
 
-const campgrounds = require('./routes/campground')
-const reviews = require('./routes/review')
+const campgroundsRoute = require('./routes/campgrounds')
+const reviewsRoute = require('./routes/reviews')
+const usersRoute = require('./routes/users')
 
+// connect to database
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
     // useCreateIndex:true, 
     useUnifiedTopology: true
 })
-
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, "connection error:"));
 db.once("open", () => {
@@ -30,15 +34,13 @@ const app = express()
 // use EJS for HTML templating: use a template to render data. \
 // set view engine to EJS.
 app.set('view engine', 'ejs');
-// __dirname is an environment variable that tells you the absolute path of the directory containing the currently executing f
+app.engine('ejs', ejsMate);
+// __dirname is an environment variable that tells you the absolute path of the directory containing the currently executing function
 app.set('views', path.join(__dirname, '/views'))
 
 // use npm package "method-override" for HTML verb PUT
 app.use(methodOverride('_method'))
-// this code allows you to see req.body
-
-app.engine('ejs', ejsMate);
-
+app.use(express.urlencoded({ extended: true }))
 // express session
 app.use(session({
     secret: 'keyboard cat',
@@ -51,7 +53,6 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }))
-
 app.use(flash())
 app.use((req, res, next) => {
     res.locals.success = req.flash('success')
@@ -60,18 +61,35 @@ app.use((req, res, next) => {
     next()
 })
 
-
-// use the routers
-app.use('/campgrounds', campgrounds)
-app.use('/campgrounds/:id/reviews', reviews)
 // set up path for static files
 app.use(express.static(path.join(__dirname, '/public')))
+
+// set up passport
+app.use(passport.initialize())
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()))
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// use the routers
+app.use('/', usersRoute)
+app.use('/campgrounds', campgroundsRoute)
+app.use('/campgrounds/:id/reviews', reviewsRoute)
+
+app.get('/fakeUser', async (req, res) => {
+    const user = new User({ email: 'colt@gmail.com', username: 'colt ' });
+    const newUser = await User.register(user, 'monkey');
+    res.send(newUser)
+})
 
 
 // Home page, empty for now
 app.get('/home', catchAsync(async (req, res) => {
     res.render('campgrounds/home')
 }))
+
+
 
 // if nothing matches, response with 404
 app.all('*', (req, res, next) => {
