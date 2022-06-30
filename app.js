@@ -53,14 +53,6 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }))
-// flash message middleware
-app.use(flash())
-app.use((req, res, next) => {
-    res.locals.success = req.flash('success')
-    res.locals.error = req.flash('error')
-    res.locals.warning = req.flash('warning')
-    next()
-})
 
 // set up path for static files
 app.use(express.static(path.join(__dirname, '/public')))
@@ -72,6 +64,18 @@ passport.use(new localStrategy(User.authenticate()))
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+
+// flash message middleware. Also store req.user
+app.use(flash())
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    res.locals.success = req.flash('success')
+    res.locals.error = req.flash('error')
+    res.locals.warning = req.flash('warning')
+    next()
+})
+
 
 // use the routers
 app.use('/', usersRoute)
