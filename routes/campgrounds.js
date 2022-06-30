@@ -3,7 +3,8 @@ const router = express.Router();
 const catchAsync = require('../utils/catchAsync')
 const ExpressError = require('../utils/ExpressError')
 const Campground = require('../models/campground.js')
-const { campgroundSchema } = require('../schemas.js')
+const { campgroundSchema } = require('../schemas.js');
+const ensureLogin = require('../utils/ensureLogin');
 
 
 
@@ -28,12 +29,16 @@ router.get('/', catchAsync(async (req, res) => {
 }))
 
 // CREATE: page to add new campground
-router.get('/new', (req, res) => {
+router.get('/new', ensureLogin, (req, res) => {
+    // if (!req.isAuthenticated()) {
+    //     req.flash('error', 'you must sign in first')
+    //     return res.redirect('/login')
+    // }
     res.render('campgrounds/new')
 })
 
 // save the new campground
-router.post('/', validateCampground, catchAsync(async (req, res, next) => {
+router.post('/', ensureLogin, validateCampground, catchAsync(async (req, res, next) => {
     // 1. this try and catch error handler should pass the error to the error handler at the bottom of the code.
     // 2. The try catch structure has been replaced by the catchAsync(). 
     // if (!req.body.campground) {
@@ -48,14 +53,14 @@ router.post('/', validateCampground, catchAsync(async (req, res, next) => {
 
 // UPDATE: page to update a campground
 // render the "edit" page:
-router.get('/:id/edit', catchAsync(async (req, res) => {
+router.get('/:id/edit', ensureLogin, catchAsync(async (req, res) => {
     const campID = req.params.id;
     const campground = await Campground.findById(campID);
     res.render('campgrounds/edit', { campID, campground })
 }))
 
 // router.put is used to update campground
-router.put('/:id/edit', validateCampground, catchAsync(async (req, res) => {
+router.put('/:id/edit', ensureLogin, validateCampground, catchAsync(async (req, res) => {
     const campground = await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground });
     await campground.save();
     req.flash('success', 'you just updated a campground!')
@@ -76,7 +81,7 @@ router.get('/:id', catchAsync(async (req, res) => {
 
 
 // delete the camground, and remove all reviews under the campground
-router.delete('/:id', catchAsync(async (req, res) => {
+router.delete('/:id', ensureLogin, catchAsync(async (req, res) => {
     await Campground.findByIdAndDelete(req.params.id)
     res.redirect('/campgrounds')
 }))
