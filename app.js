@@ -35,7 +35,8 @@ app.set('views', path.join(__dirname, '/views'))
 
 // use npm package "method-override" for HTML verb PUT
 app.use(methodOverride('_method'))
-app.use(express.urlencoded({ extended: true }))
+// this code allows you to see req.body
+
 app.engine('ejs', ejsMate);
 
 // express session
