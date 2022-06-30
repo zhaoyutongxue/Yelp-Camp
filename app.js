@@ -53,6 +53,7 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }))
+// flash message middleware
 app.use(flash())
 app.use((req, res, next) => {
     res.locals.success = req.flash('success')
