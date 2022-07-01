@@ -24,13 +24,15 @@
                 </ul>
                 <div>
                     <a href="/campgrounds" class="btn btn-primary">All Campground</a>
-                    <a href="/campgrounds/<%= campID %>/edit" class="btn btn-warning">Edit Campground</a>
 
-                    <form action="/campgrounds/<%=campID%>?_method=DELETE" method='POST'>
-                        <button class="btn btn-danger">
-                            DELETE
-                        </button>
-                    </form>
+                    <% if(currentUser&&campground.author.equals(currentUser._id)) {%>
+                        <a href="/campgrounds/<%= campID %>/edit" class="btn btn-warning">Edit Campground</a>
+                        <form action="/campgrounds/<%=campID%>?_method=DELETE" method='POST'>
+                            <button class="btn btn-danger">
+                                DELETE
+                            </button>
+                            <% } %>
+                        </form>
                 </div>
             </div>
         </div>

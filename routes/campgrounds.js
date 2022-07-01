@@ -30,10 +30,6 @@ router.get('/', catchAsync(async (req, res) => {
 
 // CREATE: page to add new campground
 router.get('/new', ensureLogin, (req, res) => {
-    // if (!req.isAuthenticated()) {
-    //     req.flash('error', 'you must sign in first')
-    //     return res.redirect('/login')
-    // }
     res.render('campgrounds/new')
 })
 
@@ -44,7 +40,6 @@ router.post('/', ensureLogin, validateCampground, catchAsync(async (req, res, ne
     await campground.save();
     req.flash('success', 'You just made a new campground!');
     res.redirect(`/campgrounds/${campground._id}`)
-    // res.send(req.body)
 }))
 
 // UPDATE: page to update a campground
@@ -61,7 +56,6 @@ router.put('/:id/edit', ensureLogin, validateCampground, catchAsync(async (req, 
     await campground.save();
     req.flash('success', 'you just updated a campground!')
     res.redirect(`/campgrounds/${campground._id}`)
-    // res.send('it works!')
 }))
 
 //Show campground: 
@@ -78,8 +72,20 @@ router.get('/:id', catchAsync(async (req, res) => {
 
 // delete the camground, and remove all reviews under the campground
 router.delete('/:id', ensureLogin, catchAsync(async (req, res) => {
-    await Campground.findByIdAndDelete(req.params.id)
+    const campID = req.params.id;
+    const campground = await Campground.findById(campID).populate('author');
+    console.log('authous is ' + campground.author._id)
+    console.log('current is ' + req.user._id)
+    if (campground.author._id.toString() === req.user._id.toString()) {
+        await Campground.findByIdAndDelete(req.params.id)
+        req.flash('warning', 'campground deleted')
+        console.log('yes, deleted!')
+    } else {
+        req.flash('error', 'you dont have the right to delete this campground')
+        console.log('no, still there')
+    }
     res.redirect('/campgrounds')
+
 }))
 
 module.exports = router

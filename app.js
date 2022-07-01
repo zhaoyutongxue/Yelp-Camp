@@ -66,7 +66,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
-// flash message middleware. Also store req.user
+// flash message middleware. Also store req.user for all templates. 
 app.use(flash())
 app.use((req, res, next) => {
     res.locals.currentUser = req.user;
