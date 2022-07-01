@@ -24,7 +24,7 @@ const validateCampground = (req, res, next) => {
 //List of the campgrounds:
 router.get('/', catchAsync(async (req, res) => {
     // save mongo db data into a local variable, then pass through the data and render it. 
-    const campgrounds = await Campground.find();
+    const campgrounds = await Campground.find().populate();
     res.render('campgrounds/index', { campgrounds })
 }))
 
@@ -39,12 +39,8 @@ router.get('/new', ensureLogin, (req, res) => {
 
 // save the new campground
 router.post('/', ensureLogin, validateCampground, catchAsync(async (req, res, next) => {
-    // 1. this try and catch error handler should pass the error to the error handler at the bottom of the code.
-    // 2. The try catch structure has been replaced by the catchAsync(). 
-    // if (!req.body.campground) {
-    //     throw new ExpressError("Invalid Campground data", "400 ")
-    // }
     const campground = new Campground(req.body.campground);
+    campground.author = req.user._id;
     await campground.save();
     req.flash('success', 'You just made a new campground!');
     res.redirect(`/campgrounds/${campground._id}`)
@@ -71,7 +67,7 @@ router.put('/:id/edit', ensureLogin, validateCampground, catchAsync(async (req, 
 //Show campground: 
 router.get('/:id', catchAsync(async (req, res) => {
     const campID = req.params.id;
-    const campground = await Campground.findById(campID).populate('reviews');
+    const campground = await Campground.findById(campID).populate('reviews').populate('author');
     if (!campground) {
         req.flash('error', 'Can not find this campground!')
         return res.redirect('/campgrounds')
