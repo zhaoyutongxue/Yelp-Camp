@@ -3,7 +3,11 @@ const Schema = mongoose.Schema;
 
 const ReviewSchema = new Schema({
     body: String,
-    rating: Number
+    rating: Number,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
 })
 // the first arg is the singular name of the collection.
 // mongoose will use campgrounds as collection in the database.  

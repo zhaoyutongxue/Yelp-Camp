@@ -36,45 +36,49 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-6">
-            <form action="/campgrounds/<%=campID%>/reviews" method="POST" class='validation-form card-body mb-3'
-                novalidate>
-                <h2>leave a review</h2>
-                <label class="form-label" for="rating">Rating</label>
-                <input class="form-range" id="rating" type="range" min="0" max="5" name="reviews[rating]">
-                <div>
-                    <label class="form-label" for="description">Review</label>
-                    <textarea class="form-control" id="description" type="text" name="reviews[body]" cols="30" rows="3"
-                        required></textarea>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
-                <button class="btn btn-success">Submit</button>
-            </form>
-
-            <div class="card mb-3">
-                <% for(let review of campground.reviews) { %>
-                    <div class="card mb-2">
-                        <div class="card-body">
-                            <div class="card-title">
-                                Rating:<%= review.rating %>
-                            </div>
-                            <div class="card-text">
-                                <p>
-                                    <%= review.body %>
-                                </p>
-                                <form action="/campgrounds/<%=campID%>/reviews/<%=review.id%>?_method=DELETE "
-                                    method='POST'>
-                                    <button class="btn btn-danger btn-sm">
-                                        DELETE
-                                    </button>
-                                </form>
-                            </div>
+        <% if(currentUser) {%>
+            <div class="col-6">
+                <form action="/campgrounds/<%=campID%>/reviews" method="POST" class='validation-form card-body mb-3'
+                    novalidate>
+                    <h2>leave a review</h2>
+                    <label class="form-label" for="rating">Rating</label>
+                    <input class="form-range" id="rating" type="range" min="0" max="5" name="reviews[rating]">
+                    <div>
+                        <label class="form-label" for="description">Review</label>
+                        <textarea class="form-control" id="description" type="text" name="reviews[body]" cols="30"
+                            rows="3" required></textarea>
+                        <div class="valid-feedback">
+                            Looks good!
                         </div>
                     </div>
-                    <% } %>
+                    <button class="btn btn-success">Submit</button>
+                </form>
+
+                <div class="card mb-3">
+                    <% for(let review of campground.reviews) { %>
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <div class="card-title">
+                                    Rating:<%= review.rating %>
+                                </div>
+                                <div class="card-text">
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        By <%= review.author.username%>
+                                    </h6>
+                                    <p>
+                                        Review: <%= review.body %>
+                                    </p>
+                                    <form action="/campgrounds/<%=campID%>/reviews/<%=review.id%>?_method=DELETE "
+                                        method='POST'>
+                                        <button class="btn btn-danger btn-sm">
+                                            DELETE
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+                </div>
             </div>
-        </div>
+            <% } %>
     </div>
