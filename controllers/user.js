@@ -1,3 +1,5 @@
+const User = require('../models/user.js')
+
 module.exports.renderRegister = (req, res) => {
     res.render('./users/register.ejs');
 }
@@ -17,6 +19,7 @@ module.exports.register = async (req, res, next) => {
             res.redirect('/campgrounds')
         })
     } catch (e) {
+        console.log(e)
         req.flash('error', e.message)
         res.redirect('/register')
     }
