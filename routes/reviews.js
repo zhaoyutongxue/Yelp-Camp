@@ -7,7 +7,7 @@ const router = express.Router({ mergeParams: true })
 const Campground = require('../models/campground.js')
 const Review = require('../models/review.js')
 
-const { ensureLogin, validateReview } = require('../middleware')
+const { ensureLogin, validateReview, isReviewAuthor } = require('../middleware')
 // middleware that is specific to this router
 router.use((req, res, next) => {
     next()
@@ -30,7 +30,7 @@ router.post('/', ensureLogin, validateReview, catchAsync(async (req, res) => {
 
 
 // delete review
-router.delete('/:reviewId', ensureLogin, catchAsync(async (req, res) => {
+router.delete('/:reviewId', ensureLogin, isReviewAuthor, catchAsync(async (req, res) => {
     const campID = req.params.id;
     const reviewId = req.params.reviewId;
     await Review.findByIdAndDelete(req.params.reviewId)
