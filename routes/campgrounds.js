@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const catchAsync = require('../utils/catchAsync')
-const Campground = require('../models/campground.js')
 const { ensureLogin, isAuthor, validateCampground } = require('../middleware')
 // require the controller file.
 const campgrounds = require('../controllers/campground')
