@@ -4,12 +4,18 @@ const catchAsync = require('../utils/catchAsync')
 const { ensureLogin, isAuthor, validateCampground } = require('../middleware')
 // require the controller file.
 const campgrounds = require('../controllers/campground')
+const multer = require('multer')
+const upload = multer({ dest: 'uploads/' })
 
 router.route('/')
     //Show all campgrounds:
     .get(catchAsync(campgrounds.index))
     // save the new campground
-    .post(ensureLogin, validateCampground, catchAsync(campgrounds.createNewCampground))
+    // .post(ensureLogin, validateCampground, catchAsync(campgrounds.createNewCampground))
+    .post(upload.array('image'), (req, res) => {
+        console.log(req.body, req.files)
+        res.send("it worked!")
+    })
 
 // Render the "create new campground page"
 router.get('/new', ensureLogin, campgrounds.renderNewForm)
