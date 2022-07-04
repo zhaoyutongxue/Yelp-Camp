@@ -24,7 +24,7 @@ router.route('/:id')
     // delete camground, and remove all reviews under the campground
     .delete(ensureLogin, isAuthor, catchAsync(campgrounds.deleteCampground))
     // edit campground
-    .put(ensureLogin, isAuthor, validateCampground, catchAsync(campgrounds.editCampground))
+    .put(ensureLogin, isAuthor, upload.array('image'), validateCampground, catchAsync(campgrounds.editCampground))
 
 // render the "edit" page:
 router.get('/:id/edit', ensureLogin, isAuthor, catchAsync(campgrounds.renderEditForm))
