@@ -3,38 +3,41 @@
     <div class="row">
         <div class="col-6">
             <div class="card mb-3">
-                <img src="<%=campground.image%>" class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <%= campground.title %>
-                    </h5>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item text-muted">
-                        <%= campground.location %>
-                    </li>
-                    <li class="list-group-item">
-                        <%= campground.price %>AUD/night
-                    </li>
-                    <li class="list-group-item">
-                        Author: <%= campground.author.username %>
-                    </li>
-                    <li class="list-group-item">
-                        <%= campground.description %>
-                    </li>
-                </ul>
-                <div>
-                    <a href="/campgrounds" class="btn btn-primary">All Campground</a>
+                <% for(let img of campground.images) {%>
+                    <img src="<%=img.url%>" class="card-img-top">
+                    <% } %>
 
-                    <% if(currentUser&&campground.author.equals(currentUser._id)) {%>
-                        <a href="/campgrounds/<%= campID %>/edit" class="btn btn-warning">Edit Campground</a>
-                        <form action="/campgrounds/<%=campID%>?_method=DELETE" method='POST'>
-                            <button class="btn btn-danger">
-                                DELETE
-                            </button>
-                            <% } %>
-                        </form>
-                </div>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <%= campground.title %>
+                            </h5>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item text-muted">
+                                <%= campground.location %>
+                            </li>
+                            <li class="list-group-item">
+                                <%= campground.price %>AUD/night
+                            </li>
+                            <li class="list-group-item">
+                                Author: <%= campground.author.username %>
+                            </li>
+                            <li class="list-group-item">
+                                <%= campground.description %>
+                            </li>
+                        </ul>
+                        <div>
+                            <a href="/campgrounds" class="btn btn-primary">All Campground</a>
+
+                            <% if(currentUser&&campground.author.equals(currentUser._id)) {%>
+                                <a href="/campgrounds/<%= campID %>/edit" class="btn btn-warning">Edit Campground</a>
+                                <form action="/campgrounds/<%=campID%>?_method=DELETE" method='POST'>
+                                    <button class="btn btn-danger">
+                                        DELETE
+                                    </button>
+                                    <% } %>
+                                </form>
+                        </div>
             </div>
         </div>
         <% if(currentUser) {%>

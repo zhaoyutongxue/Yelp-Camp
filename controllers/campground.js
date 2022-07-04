@@ -1,3 +1,4 @@
+const { equal } = require('joi');
 const Campground = require('../models/campground.js')
 
 module.exports.index = async (req, res) => {
@@ -11,9 +12,15 @@ module.exports.renderNewForm = (req, res) => {
 }
 
 module.exports.createNewCampground = async (req, res, next) => {
+
     const campground = new Campground(req.body.campground);
     campground.author = req.user._id;
+    campground.images = req.files.map(f => ({
+        url: f.path,
+        filename: f.filename
+    }))
     await campground.save();
+    console.log(campground)
     req.flash('success', 'You just made a new campground!');
     res.redirect(`/campgrounds/${campground._id}`)
 }
