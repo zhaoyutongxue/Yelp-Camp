@@ -20,6 +20,7 @@ module.exports.createNewCampground = async (req, res, next) => {
         filename: f.filename
     }))
     await campground.save();
+    console.log(...req.files)
     console.log(campground)
     req.flash('success', 'You just made a new campground!');
     res.redirect(`/campgrounds/${campground._id}`)
