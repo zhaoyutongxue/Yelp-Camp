@@ -40,14 +40,14 @@ const seedDB = async () => {
             author: '62be3dab046c02121fec22cb',
             location: `${cities[ram1000].city}, ${cities[ram1000].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
-            image: [
+            images: [
                 {
-                    url: 'https://res.cloudinary.com/dcc4gmbgx/image/upload/v1656917151/YelpCamp/uchomwmjckt3eg0xmdym.png',
-                    filename: 'YelpCamp/uchomwmjckt3eg0xmdym'
+                    url: 'https://res.cloudinary.com/dcc4gmbgx/image/upload/v1657000365/YelpCamp/htwlqr71qak7lphzsnoa.jpg',
+                    filename: 'YelpCamp/htwlqr71qak7lphzsnoa'
                 },
                 {
-                    url: 'https://res.cloudinary.com/dcc4gmbgx/image/upload/v1656917156/YelpCamp/jhwz9510qkbhyq2eo7ij.png',
-                    filename: 'YelpCamp/jhwz9510qkbhyq2eo7ij'
+                    url: 'https://res.cloudinary.com/dcc4gmbgx/image/upload/v1656940781/YelpCamp/anhwwetdf2utf2yol65s.jpg',
+                    filename: 'YelpCamp/anhwwetdf2utf2yol65s'
                 }
             ],
             description: 'just typing something',

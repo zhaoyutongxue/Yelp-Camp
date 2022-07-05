@@ -1,5 +1,6 @@
 const { equal } = require('joi');
 const Campground = require('../models/campground.js')
+const { cloudinary } = require('../cloudinary')
 
 module.exports.index = async (req, res) => {
     // save mongo db data into a local variable, then pass through the data and render it. 
@@ -53,9 +54,15 @@ module.exports.editCampground = async (req, res) => {
         url: f.path,
         filename: f.filename
     }));
-    console.log(req.body)
     campground.images.push(...imgs);
     await campground.save();
+    if (req.body.deleteImages) {
+        for (let filename of req.body.deleteImages) {
+            cloudinary.uploader.destroy(filename)
+        }
+        await campground.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
+        console.log(campground)
+    }
     req.flash('success', 'you just updated a campground!')
     res.redirect(`/campgrounds/${campground._id}`)
 }
