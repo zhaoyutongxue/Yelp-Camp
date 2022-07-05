@@ -53,6 +53,7 @@ module.exports.editCampground = async (req, res) => {
         url: f.path,
         filename: f.filename
     }));
+    console.log(req.body)
     campground.images.push(...imgs);
     await campground.save();
     req.flash('success', 'you just updated a campground!')
@@ -64,5 +65,4 @@ module.exports.deleteCampground = async (req, res) => {
     await Campground.findByIdAndDelete(campID)
     req.flash('warning', 'campground deleted')
     res.redirect('/campgrounds')
-
 }
