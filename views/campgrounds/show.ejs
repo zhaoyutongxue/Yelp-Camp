@@ -1,12 +1,9 @@
 <% layout('/layouts/boilerplate') %>
-    <script>
-        const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
-    </script>
+
 
     <link rel="stylesheet" href="/stylesheet/stars.css">
     <div class="row">
         <div class="col-6">
-            <div id='map' style='width: 400px; height: 300px;'></div>
             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                     <% campground.images.forEach((img,i)=>{%>
@@ -60,8 +57,10 @@
                 </div>
             </div>
         </div>
-        <% if(currentUser) {%>
-            <div class="col-6">
+
+        <div class="col-6">
+            <div id='map' style='width: 650px; height: 300px;'></div>
+            <% if(currentUser) {%>
                 <form action="/campgrounds/<%=campID%>/reviews" method="POST" class='validation-form card-body mb-3'
                     novalidate>
                     <h2>leave a review</h2>
@@ -123,9 +122,11 @@
                         </div>
                         <% } %>
                 </div>
-            </div>
-            <% } %>
+        </div>
+        <% } %>
     </div>
-
-
+    <script>
+        const mapToken = '<%-process.env.MAPBOX_TOKEN%>'
+        const campground = <%- JSON.stringify(campground) %>
+    </script>
     <script src="/javascripts/showPageMap.js"></script>
