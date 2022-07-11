@@ -23,3 +23,13 @@ body {
     /* overwrite color */
     color: rgba(225, 225, 225, 0.5);
 }
+
+.nav-link.active {
+    color: white;
+    border-bottom-color: white
+}
+
+.btn-secondary,
+.btn-secondary:hover {
+    color: black;
+}
