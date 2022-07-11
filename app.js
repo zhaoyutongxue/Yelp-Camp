@@ -21,6 +21,7 @@ const campgroundsRoute = require('./routes/campgrounds')
 const reviewsRoute = require('./routes/reviews')
 const usersRoute = require('./routes/users')
 
+const mongoSanitize = require('express-mongo-sanitize');
 // connect to database
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
@@ -34,7 +35,6 @@ db.once("open", () => {
 })
 
 const app = express()
-
 
 // use EJS for HTML templating: use a template to render data. \
 // set view engine to EJS.
@@ -70,6 +70,8 @@ passport.use(new localStrategy(User.authenticate()))
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+//  sanitize the received data, and remove any offending keys, or replace the characters with a 'safe' one.
+app.use(mongoSanitize());
 
 // flash message middleware. Also store req.user for all templates. 
 app.use(flash())

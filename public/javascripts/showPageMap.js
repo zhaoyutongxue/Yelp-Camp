@@ -8,6 +8,7 @@ const map = new mapboxgl.Map({
 });
 map.on('style.load', () => {
     map.setFog({}); // Set the default atmosphere style
+    map.addControl(new mapboxgl.NavigationControl())//add the control panel on top right(default position)
 });
 
 // Create a default Marker and add it to the map.
