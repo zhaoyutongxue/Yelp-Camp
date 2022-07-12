@@ -17,6 +17,8 @@ const passport = require('passport');
 const localStrategy = require('passport-local');
 const User = require('./models/user')
 
+// const helmet = require('helmet')
+
 const campgroundsRoute = require('./routes/campgrounds')
 const reviewsRoute = require('./routes/reviews')
 const usersRoute = require('./routes/users')
@@ -48,11 +50,12 @@ app.use(methodOverride('_method'))
 app.use(express.urlencoded({ extended: true }))
 // express session
 app.use(session({
+    name: "heysession",//this will change the default name connect.sid to session
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
     cookie: {
-        // secure: true,
+        // secure: true,//when we deploy the app, we will change it. 
         httpOnly: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
@@ -76,6 +79,7 @@ app.use(mongoSanitize());
 // flash message middleware. Also store req.user for all templates. 
 app.use(flash())
 app.use((req, res, next) => {
+    console.log(req.query)
     res.locals.currentUser = req.user;
     res.locals.success = req.flash('success')
     res.locals.error = req.flash('error')
@@ -83,6 +87,10 @@ app.use((req, res, next) => {
     next()
 })
 
+// use helmet to secure the app
+// app.use(helmet({
+//     contentSecurityPolicy: false
+//   }))
 
 // use the routers
 app.use('/', usersRoute)
