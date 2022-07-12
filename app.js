@@ -16,16 +16,20 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const localStrategy = require('passport-local');
 const User = require('./models/user')
-
 // const helmet = require('helmet')
+
 
 const campgroundsRoute = require('./routes/campgrounds')
 const reviewsRoute = require('./routes/reviews')
 const usersRoute = require('./routes/users')
 
 const mongoSanitize = require('express-mongo-sanitize');
+
 // connect to database
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+// process.env.DB_URL
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp'; 
+const MongoStore = require('connect-mongo');
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     // useCreateIndex:true, 
     useUnifiedTopology: true
@@ -35,6 +39,9 @@ db.on('error', console.error.bind(console, "connection error:"));
 db.once("open", () => {
     console.log("database connected")
 })
+
+
+
 
 const app = express()
 
@@ -49,9 +56,22 @@ app.set('views', path.join(__dirname, '/views'))
 app.use(methodOverride('_method'))
 app.use(express.urlencoded({ extended: true }))
 // express session
+const secret = process.env.SECRET || 'keyboard cat'
+const store = new MongoStore({
+    mongoUrl : dbUrl,
+    secret,
+    touchAfter: 24*60*60
+
+}) 
+
+store.on("error",function(e){
+    console.log("session store error", e)
+})
+
 app.use(session({
+    store,
     name: "heysession",//this will change the default name connect.sid to session
-    secret: 'keyboard cat',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
