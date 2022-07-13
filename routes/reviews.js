@@ -9,6 +9,7 @@ const router = express.Router({ mergeParams: true })
 const reviews = require('../controllers/review')
 
 const { ensureLogin, validateReview, isReviewAuthor } = require('../middleware')
+
 // middleware that is specific to this router
 router.use((req, res, next) => {
     next()
@@ -17,7 +18,7 @@ router.use((req, res, next) => {
 
 
 // post new review
-router.post('/', ensureLogin, validateReview, catchAsync(reviews.createReview))
+router.post('/', ensureLogin,validateReview, catchAsync(reviews.createReview))
 
 // delete review
 router.delete('/:reviewId', ensureLogin, isReviewAuthor, catchAsync(reviews.deleteReview))

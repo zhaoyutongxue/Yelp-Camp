@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Review = require('./review');
 const opts = { toJSON: { virtuals: true } };
+
 const ImageSchema = new Schema({
     url: String,
     filename: String
@@ -9,6 +10,14 @@ const ImageSchema = new Schema({
 
 ImageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('upload', 'upload/w_200');
+});
+// fix the size of the image on the index page
+ImageSchema.virtual('index').get(function () {
+    return this.url.replace('upload', 'upload/w_820,h_550,c_fill');
+});
+// scale the iamge for campground show page
+ImageSchema.virtual('showPage').get(function () {
+    return this.url.replace('upload', 'upload/w_820,h_550,c_scale');
 });
 
 

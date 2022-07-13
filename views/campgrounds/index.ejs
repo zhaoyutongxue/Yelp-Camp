@@ -2,7 +2,7 @@
     <div id="cluster-map" ></div>
     <h1>All Campgrounds</h1>
     <div>
-        <a href="/campgrounds/new">Add Campground</a>
+        <a class="btn btn-primary" href="/campgrounds/new">Add Campground</a>
     </div>
 
     <% for(let campground of campgrounds){ %>
@@ -11,7 +11,7 @@
                 <!-- each card has 12 rows, divide them into 4 and 8 -->
                 <div class="col-md-4">
                     <% if(campground.images.length){ %>
-                        <img class="img-fluid" alt="" src="<%=campground.images[0].url%>">
+                        <img class="img-fluid" alt="" src="<%=campground.images[0].index%>">
                         <% }else{ %>
                             <img class="img-fluid" alt=""
                                 src="https://res.cloudinary.com/dcc4gmbgx/image/upload/w_250/v1657101876/YelpCamp/nji7wn4ljc9gxxgwvsnu.jpg">
