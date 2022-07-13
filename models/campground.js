@@ -17,7 +17,7 @@ ImageSchema.virtual('index').get(function () {
 });
 // scale the iamge for campground show page
 ImageSchema.virtual('showPage').get(function () {
-    return this.url.replace('upload', 'upload/w_820,h_550,c_scale');
+    return this.url.replace('upload', 'upload/w_820,h_550,c_fit');
 });
 
 
