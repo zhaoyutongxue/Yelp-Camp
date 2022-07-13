@@ -50,9 +50,8 @@
                     </li>
                 </ul>
                 <div>
-                    <a href="/campgrounds" class="btn btn-primary">All Campground</a>
-
-                    <% if(currentUser&&campground.author.equals(currentUser._id)) {%>
+                    <a href="/campgrounds" class="btn btn-primary">All Campground</a> 
+                    <% if(currentUser&&campground.author.equals(currentUser._id)||currentUser._id.equals('62cd578ffa7d9f6208b2dbbe')) {%>
                         <a href="/campgrounds/<%= campID %>/edit" class="btn btn-warning">Edit Campground</a>
                         <form action="/campgrounds/<%=campID%>?_method=DELETE" method='POST'>
                             <button class="btn btn-danger">
@@ -116,7 +115,7 @@
                                     <p>
                                         Review: <%= review.body %>
                                     </p>
-                                    <% if(currentUser&&review.author.equals(currentUser._id)) {%>
+                                    <% if(currentUser&&review.author.equals(currentUser._id)||currentUser._id.equals('62cd578ffa7d9f6208b2dbbe')) {%>
                                         <form action="/campgrounds/<%=campID%>/reviews/<%=review.id%>?_method=DELETE "
                                             method='POST'>
                                             <button class="btn btn-danger btn-sm">
