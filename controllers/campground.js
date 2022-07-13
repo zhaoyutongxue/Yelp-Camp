@@ -4,6 +4,7 @@ const { cloudinary } = require('../cloudinary')
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
+const ExpressError = require('../utils/ExpressError')
 
 
 module.exports.index = async (req, res) => {
@@ -21,9 +22,11 @@ module.exports.createNewCampground = async (req, res, next) => {
         query: req.body.campground.location,
         limit: 1
     }).send();
-
     const campground = new Campground(req.body.campground);
-    campground.geometry = geoData.body.features[0].geometry;
+    try { campground.geometry = geoData.body.features[0].geometry; } catch {
+        throw new ExpressError(`Can not recognise location:"${req.body.campground.location}"`, 500)
+    };
+
     campground.author = req.user._id;
     campground.images = req.files.map(f => ({
         url: f.path,

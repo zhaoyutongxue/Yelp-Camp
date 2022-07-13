@@ -137,7 +137,6 @@ app.all('*', (req, res, next) => {
 
 // error handling
 app.use((err, req, res, next) => {
-    // console.log(err);
     const { statusCode = 500 } = err;
     // console.log(err)
     // console.log('this is the err.message: ' + err.message);
